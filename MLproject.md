@@ -74,6 +74,17 @@ Below we check for variables that have near zero and zero variance. However, whe
 
 ```r
 library(caret)
+```
+
+```
+## Loading required package: lattice
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
 zerVar <- nearZeroVar(training.reduced)
 length(zerVar)
 ```
@@ -100,6 +111,36 @@ Below we separate the response column from the predictor columns (to be used whe
 ```r
 library(ranger)
 library(gbm)
+```
+
+```
+## Loading required package: survival
+```
+
+```
+## 
+## Attaching package: 'survival'
+```
+
+```
+## The following object is masked from 'package:caret':
+## 
+##     cluster
+```
+
+```
+## Loading required package: splines
+```
+
+```
+## Loading required package: parallel
+```
+
+```
+## Loaded gbm 2.1.3
+```
+
+```r
 train_x <- train[,-54]
 train_y <- train[, 54] # classe
 set.seed(4444)
@@ -121,15 +162,10 @@ model_rf <- train(x = train_x, y = train_y, method = "ranger", trControl = myCon
 ```
 
 ```
-## Growing trees.. Progress: 87%. Estimated remaining time: 4 seconds.
-## Growing trees.. Progress: 79%. Estimated remaining time: 8 seconds.
-## Growing trees.. Progress: 80%. Estimated remaining time: 7 seconds.
-## Growing trees.. Progress: 86%. Estimated remaining time: 5 seconds.
-## Growing trees.. Progress: 17%. Estimated remaining time: 2 minutes, 35 seconds.
-## Growing trees.. Progress: 33%. Estimated remaining time: 2 minutes, 3 seconds.
-## Growing trees.. Progress: 51%. Estimated remaining time: 1 minute, 30 seconds.
-## Growing trees.. Progress: 68%. Estimated remaining time: 59 seconds.
-## Growing trees.. Progress: 84%. Estimated remaining time: 28 seconds.
+## Growing trees.. Progress: 21%. Estimated remaining time: 1 minute, 53 seconds.
+## Growing trees.. Progress: 43%. Estimated remaining time: 1 minute, 23 seconds.
+## Growing trees.. Progress: 64%. Estimated remaining time: 52 seconds.
+## Growing trees.. Progress: 82%. Estimated remaining time: 26 seconds.
 ```
 
 Below we print and plot the model and can see that the selected one use mtry set to 53. So 53 variables are randomly selected at each node of each tree (as opposed to using 2 or 27).
@@ -315,4 +351,4 @@ quiz.p
 ```
 
 ## Conclusion
-The random forest model that uses 53 random variables at each node outperformed the gradient boosting model. It's estimated out of sample error (based on predicting the test set) was 99.62%. The 5-fold cross validation was used to test the models to reduce model fitting time (instead of bootstrapping). In the end, very accurate models were produced.
+The random forest model that uses 53 random variables at each node outperformed the gradient boosting model. It's estimated out of sample error (based on predicting the test set) was 0.38% (100 - 99.62), and the accuracy was 99.62%. The 5-fold cross validation was used to test the models to reduce model fitting time (instead of bootstrapping). In the end, very accurate models were produced.

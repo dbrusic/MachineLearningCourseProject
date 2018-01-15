@@ -143,4 +143,4 @@ quiz.p
 ```
 
 ## Conclusion
-The random forest model that uses 53 random variables at each node outperformed the gradient boosting model. It's estimated out of sample error (based on predicting the test set) was 99.62%. The 5-fold cross validation was used to test the models to reduce model fitting time (instead of bootstrapping). In the end, very accurate models were produced.
+The random forest model that uses 53 random variables at each node outperformed the gradient boosting model. It's estimated out of sample error (based on predicting the test set) was 0.38% (100 - 99.62), and the accuracy was 99.62%. The 5-fold cross validation was used to test the models to reduce model fitting time (instead of bootstrapping). In the end, very accurate models were produced.

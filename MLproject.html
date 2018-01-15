@@ -164,8 +164,10 @@ unique(sum_missing)</code></pre>
 training.reduced &lt;- training[, -c(1,3,4,5,6,7, NA_cols)]
 testing.reduced &lt;- testing[, -c(1,3,4,5,6,7, NA_cols)]</code></pre>
 <p>Below we check for variables that have near zero and zero variance. However, when using the defaults of the <code>nearZeroVar</code> caret function (freqCut = 19 and uniqueCut = 10) none of the variables have near zero variance, so all variables will be used when training the models.</p>
-<pre class="r"><code>library(caret)
-zerVar &lt;- nearZeroVar(training.reduced)
+<pre class="r"><code>library(caret)</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre class="r"><code>zerVar &lt;- nearZeroVar(training.reduced)
 length(zerVar)</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>Below we split <code>training.reduced</code> into train and test sets. The train set is 80% of the full training set and the test set is 20%.</p>
@@ -177,8 +179,17 @@ train &lt;- training.reduced[1:split, ]
 test &lt;- training.reduced[(split+1):nrow(training.reduced), ]</code></pre>
 <p>Below we separate the response column from the predictor columns (to be used when building our models). We also create the five folds of the data that will be used for cross validation for both of our models. This is done here so that the folds are the same for both the random forest model and the gradient boosting model. This allows for a fair comparison later on.</p>
 <pre class="r"><code>library(ranger)
-library(gbm)
-train_x &lt;- train[,-54]
+library(gbm)</code></pre>
+<pre><code>## Loading required package: survival</code></pre>
+<pre><code>## 
+## Attaching package: 'survival'</code></pre>
+<pre><code>## The following object is masked from 'package:caret':
+## 
+##     cluster</code></pre>
+<pre><code>## Loading required package: splines</code></pre>
+<pre><code>## Loading required package: parallel</code></pre>
+<pre><code>## Loaded gbm 2.1.3</code></pre>
+<pre class="r"><code>train_x &lt;- train[,-54]
 train_y &lt;- train[, 54] # classe
 set.seed(4444)
 myFolds &lt;- createFolds(train_y, k = 5)
@@ -193,15 +204,10 @@ myControl &lt;- trainControl(method = &quot;cv&quot;,
 <p>Now we can fit a random forest model with the <code>caret</code> package using the <code>ranger</code> package. The ranger package was used instead of the <code>randomForest</code> package because it tends to run faster. We use the control we created above that specifies to use 5-fold cross validation and accuracy to select the best model (based on differing default tuning parameters).</p>
 <pre class="r"><code>set.seed(4444)
 model_rf &lt;- train(x = train_x, y = train_y, method = &quot;ranger&quot;, trControl = myControl)</code></pre>
-<pre><code>## Growing trees.. Progress: 87%. Estimated remaining time: 4 seconds.
-## Growing trees.. Progress: 79%. Estimated remaining time: 8 seconds.
-## Growing trees.. Progress: 80%. Estimated remaining time: 7 seconds.
-## Growing trees.. Progress: 86%. Estimated remaining time: 5 seconds.
-## Growing trees.. Progress: 17%. Estimated remaining time: 2 minutes, 35 seconds.
-## Growing trees.. Progress: 33%. Estimated remaining time: 2 minutes, 3 seconds.
-## Growing trees.. Progress: 51%. Estimated remaining time: 1 minute, 30 seconds.
-## Growing trees.. Progress: 68%. Estimated remaining time: 59 seconds.
-## Growing trees.. Progress: 84%. Estimated remaining time: 28 seconds.</code></pre>
+<pre><code>## Growing trees.. Progress: 21%. Estimated remaining time: 1 minute, 53 seconds.
+## Growing trees.. Progress: 43%. Estimated remaining time: 1 minute, 23 seconds.
+## Growing trees.. Progress: 64%. Estimated remaining time: 52 seconds.
+## Growing trees.. Progress: 82%. Estimated remaining time: 26 seconds.</code></pre>
 <p>Below we print and plot the model and can see that the selected one use mtry set to 53. So 53 variables are randomly selected at each node of each tree (as opposed to using 2 or 27).</p>
 <pre class="r"><code>model_rf</code></pre>
 <pre><code>## Random Forest 
@@ -333,7 +339,7 @@ quiz.p</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
-<p>The random forest model that uses 53 random variables at each node outperformed the gradient boosting model. It’s estimated out of sample error (based on predicting the test set) was 99.62%. The 5-fold cross validation was used to test the models to reduce model fitting time (instead of bootstrapping). In the end, very accurate models were produced.</p>
+<p>The random forest model that uses 53 random variables at each node outperformed the gradient boosting model. It’s estimated out of sample error (based on predicting the test set) was 0.38% (100 - 99.62), and the accuracy was 99.62%. The 5-fold cross validation was used to test the models to reduce model fitting time (instead of bootstrapping). In the end, very accurate models were produced.</p>
 </div>
 
 
